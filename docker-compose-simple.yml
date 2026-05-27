@@ -1,0 +1,87 @@
+services:
+  # ============ PostgreSQL para SonarQube ============
+  postgres:
+    image: postgres:15-alpine
+    container_name: sonarqube-db
+    environment:
+      - POSTGRES_DB=sonarqube
+      - POSTGRES_USER=sonar
+      - POSTGRES_PASSWORD=sonarpass123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - pokedex-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sonar"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ============ BACKEND - Python FastAPI ============
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pokedex-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DATABASE_URL=sqlite:///./pokemon.db
+      - API_SECRET_KEY=Cisco_Net_2026_ClaveSegura
+    volumes:
+      - .:/app
+      - pokemon_db:/app/data
+    working_dir: /app
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    restart: always
+    networks:
+      - pokedex-network
+
+  # ============ FRONTEND - Next.js ============
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: pokedex-frontend
+    ports:
+      - "5500:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+    restart: always
+    networks:
+      - pokedex-network
+
+  # ============ SonarQube ============
+  sonarqube:
+    image: sonarqube:latest
+    container_name: sonarqube-server
+    ports:
+      - "9000:9000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - SONAR_JDBC_URL=jdbc:postgresql://postgres:5432/sonarqube
+      - SONAR_JDBC_USERNAME=sonar
+      - SONAR_JDBC_PASSWORD=sonarpass123
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLED=true
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_logs:/opt/sonarqube/logs
+      - sonarqube_extensions:/opt/sonarqube/extensions
+    restart: always
+    networks:
+      - pokedex-network
+
+networks:
+  pokedex-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  pokemon_db:
+  sonarqube_data:
+  sonarqube_logs:
+  sonarqube_extensions:

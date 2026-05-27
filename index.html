@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Firmas Digitales - PokéDex Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-guardar {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-guardar:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-limpiar {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-limpiar:hover {
+            background: #e0e0e0;
+        }
+
+        .favoritos-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .favoritos-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .favorito-item {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #667eea;
+        }
+
+        .favorito-info {
+            flex: 1;
+        }
+
+        .favorito-nombre {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .favorito-tipo {
+            font-size: 12px;
+            color: #999;
+            margin-top: 3px;
+        }
+
+        .btn-eliminar {
+            background: #ff6b6b;
+            color: white;
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+
+        .btn-eliminar:hover {
+            background: #ff5252;
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+            display: block;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #999;
+            padding: 20px;
+            font-size: 14px;
+        }
+
+        .api-key-info {
+            background: #f0f0f0;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        code {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔒 PokéDex Pro - Firmas Digitales</h1>
+        <p class="subtitle">Gestor de Pokémons Favoritos Protegido</p>
+
+        <div class="api-key-info">
+            📌 API Key: <code>Cisco_Net_2026_ClaveSegura</code> (Enviada automáticamente en cada petición)
+        </div>
+
+        <div id="status" class="status"></div>
+
+        <form id="pokemonForm">
+            <div class="form-group">
+                <label for="nombre">Nombre del Pokémon:</label>
+                <input 
+                    type="text" 
+                    id="nombre" 
+                    placeholder="Ej: Pikachu" 
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="tipo">Tipo:</label>
+                <select id="tipo" required>
+                    <option value="">Selecciona un tipo</option>
+                    <option value="Eléctrico">Eléctrico</option>
+                    <option value="Fuego">Fuego</option>
+                    <option value="Agua">Agua</option>
+                    <option value="Planta">Planta</option>
+                    <option value="Psíquico">Psíquico</option>
+                    <option value="Normal">Normal</option>
+                    <option value="Volador">Volador</option>
+                    <option value="Draconico">Dragónico</option>
+                </select>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="btn-guardar">💾 Guardar Pokémon</button>
+                <button type="reset" class="btn-limpiar">🗑️ Limpiar Formulario</button>
+            </div>
+        </form>
+
+        <div class="favoritos-section">
+            <div class="favoritos-title">📋 Tus Pokémons Favoritos:</div>
+            <div id="favoritosList">
+                <div class="empty-message">Cargando favoritos...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_KEY = 'Cisco_Net_2026_ClaveSegura';
+        const API_URL = 'http://localhost:8000/favoritos';
+
+        // Estado de la aplicación
+        let favoritos = [];
+
+        // Elementos del DOM
+        const form = document.getElementById('pokemonForm');
+        const statusDiv = document.getElementById('status');
+        const favoritosList = document.getElementById('favoritosList');
+
+        // Mostrar mensaje de estado
+        function mostrarStatus(mensaje, tipo) {
+            statusDiv.className = `status ${tipo}`;
+            statusDiv.textContent = mensaje;
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 4000);
+        }
+
+        // Obtener favoritos
+        async function obtenerFavoritos() {
+            try {
+                const respuesta = await fetch(API_URL);
+                const datos = await respuesta.json();
+                favoritos = datos.favoritos;
+                renderizarFavoritos();
+            } catch (error) {
+                mostrarStatus(`❌ Error al obtener favoritos: ${error.message}`, 'error');
+            }
+        }
+
+        // Renderizar lista de favoritos
+        function renderizarFavoritos() {
+            if (favoritos.length === 0) {
+                favoritosList.innerHTML = '<div class="empty-message">No hay Pokémons favoritos. ¡Agrega uno!</div>';
+                return;
+            }
+
+            favoritosList.innerHTML = favoritos.map(fav => `
+                <div class="favorito-item">
+                    <div class="favorito-info">
+                        <div class="favorito-nombre">🔴 ${fav.nombre}</div>
+                        <div class="favorito-tipo">Tipo: ${fav.tipo}</div>
+                    </div>
+                    <button 
+                        type="button" 
+                        class="btn-eliminar" 
+                        onclick="eliminarFavorito(${fav.id})"
+                    >
+                        ❌ Eliminar
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Guardar nuevo favorito
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const nombre = document.getElementById('nombre').value;
+            const tipo = document.getElementById('tipo').value;
+
+            try {
+                mostrarStatus('📤 Enviando Pokémon con firma...', 'info');
+
+                const respuesta = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-KEY': API_KEY  // ← LA FIRMA AQUÍ
+                    },
+                    body: JSON.stringify({
+                        nombre: nombre,
+                        tipo: tipo
+                    })
+                });
+
+                if (!respuesta.ok) {
+                    const error = await respuesta.json();
+                    throw new Error(error.detail || 'Error desconocido');
+                }
+
+                const datos = await respuesta.json();
+                
+                // Agregar nuevo favorito a la lista
+                favoritos.push(datos.favorito);
+                renderizarFavoritos();
+                
+                // Limpiar formulario
+                form.reset();
+                
+                mostrarStatus('✅ ¡Pokémon guardado con éxito! (Firma validada)', 'success');
+            } catch (error) {
+                mostrarStatus(`❌ Error: ${error.message}`, 'error');
+                console.error('Error detallado:', error);
+            }
+        });
+
+        // Eliminar favorito
+        async function eliminarFavorito(id) {
+            if (!confirm('¿Estás seguro de que quieres eliminar este Pokémon?')) {
+                return;
+            }
+
+            try {
+                mostrarStatus('📤 Eliminando con firma...', 'info');
+
+                const respuesta = await fetch(`${API_URL}/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-API-KEY': API_KEY  // ← LA FIRMA AQUÍ
+                    }
+                });
+
+                if (!respuesta.ok) {
+                    const error = await respuesta.json();
+                    throw new Error(error.detail || 'Error desconocido');
+                }
+
+                // Remover de la lista local
+                favoritos = favoritos.filter(f => f.id !== id);
+                renderizarFavoritos();
+                
+                mostrarStatus('✅ ¡Pokémon eliminado con éxito! (Firma validada)', 'success');
+            } catch (error) {
+                mostrarStatus(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Cargar favoritos al iniciar
+        obtenerFavoritos();
+    </script>
+</body>
+</html>

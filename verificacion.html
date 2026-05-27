@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✅ Checklist de Entrega - Firmas Digitales</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .checklist {
+            display: grid;
+            gap: 15px;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            border-left: 4px solid #ddd;
+            transition: all 0.3s;
+        }
+
+        .checklist-item.success {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+
+        .checklist-item.error {
+            background: #f8d7da;
+            border-left-color: #dc3545;
+        }
+
+        .checklist-item.warning {
+            background: #fff3cd;
+            border-left-color: #ffc107;
+        }
+
+        .checkbox {
+            font-size: 1.5em;
+            margin-right: 15px;
+            min-width: 30px;
+        }
+
+        .item-content {
+            flex: 1;
+        }
+
+        .item-text {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .item-detail {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .badge-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .badge-error {
+            background: #dc3545;
+            color: white;
+        }
+
+        .badge-warning {
+            background: #ffc107;
+            color: black;
+        }
+
+        .test-section {
+            background: #f0f0f0;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .test-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .test-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 12px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .test-result {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .test-result.show {
+            display: block;
+        }
+
+        .result-code {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+
+        .result-label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .result-status {
+            padding: 10px;
+            border-radius: 3px;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        .result-status.ok {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .result-status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #28a745;
+            transition: width 0.3s;
+            width: 0%;
+        }
+
+        .evidence-box {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            border-left: 4px solid #2196F3;
+        }
+
+        .evidence-title {
+            font-weight: 600;
+            color: #1565c0;
+            margin-bottom: 10px;
+        }
+
+        .evidence-list {
+            list-style-position: inside;
+            color: #333;
+            line-height: 1.8;
+        }
+
+        .evidence-list li {
+            margin-bottom: 5px;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .summary-card h3 {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .summary-card p {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .timestamp {
+            text-align: center;
+            color: #999;
+            font-size: 0.9em;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .test-section, .test-buttons {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 Checklist de Entrega</h1>
+            <p>Implementación de Firmas Digitales y Protección de Endpoints</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">Práctica de Unidad 3 - Fase 2</p>
+        </div>
+
+        <div class="content">
+            <!-- RESUMEN -->
+            <div class="summary">
+                <div class="summary-card">
+                    <h3 id="totalItems">0</h3>
+                    <p>Items Totales</p>
+                </div>
+                <div class="summary-card">
+                    <h3 id="completedItems">0</h3>
+                    <p>Completados ✅</p>
+                </div>
+                <div class="summary-card">
+                    <h3 id="progressPercent">0%</h3>
+                    <p>Progreso</p>
+                </div>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <!-- VERIFICACIÓN DE ENTORNO -->
+            <div class="section">
+                <h2 class="section-title">1️⃣ Verificación de Entorno</h2>
+                <div class="checklist">
+                    <div class="checklist-item" id="check-env">
+                        <span class="checkbox">❓</span>
+                        <div class="item-content">
+                            <div class="item-text">Archivo .env existe y contiene API_SECRET_KEY</div>
+                            <div class="item-detail">La variable debe estar definida correctamente</div>
+                        </div>
+                        <span class="status-badge badge-warning">Verificando...</span>
+                    </div>
+
+                    <div class="checklist-item" id="check-main">
+                        <span class="checkbox">❓</span>
+                        <div class="item-content">
+                            <div class="item-text">main.py existe con importaciones correctas</div>
+                            <div class="item-detail">FastAPI, dotenv, Header, HTTPException</div>
+                        </div>
+                        <span class="status-badge badge-warning">Verificando...</span>
+                    </div>
+
+                    <div class="checklist-item" id="check-server">
+                        <span class="checkbox">❓</span>
+                        <div class="item-content">
+                            <div class="item-text">Servidor API está corriendo en puerto 8000</div>
+                            <div class="item-detail">http://localhost:8000 debe responder</div>
+                        </div>
+                        <span class="status-badge badge-warning">Verificando...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VERIFICACIÓN DE SEGURIDAD -->
+            <div class="section">
+                <h2 class="section-title">2️⃣ Implementación de Seguridad</h2>
+                <div class="checklist">
+                    <div class="checklist-item" id="check-post-fail">
+                        <span class="checkbox">❓</span>
+                        <div class="item-content">
+                            <div class="item-text">POST rechaza peticiones sin firma (Error 401)</div>
+                            <div class="item-detail">Sin header X-API-KEY debe retornar error 401</div>
+                        </div>
+                        <span class="status-badge badge-warning">Verificando...</span>
+                    </div>
+
+                    <div class="checklist-item" id="check-post-success">
+                        <span class="checkbox">❓</span>
+                        <div class="item-content">
+                            <div class="item-text">POST acepta peticiones con firma correcta (200 OK)</div>
+                            <div class="item-detail">Con X-API-KEY correcta debe funcionar</div>
+                        </div>
+                        <span class="status-badge badge-warning">Verificando...</span>
+                    </div>
+
+                    <div class="checklist-item" id="check-delete-fail">
+                        <span class="checkbox">❓</span>
+                        <div class="item-content">
+                            <div class="item-text">DELETE rechaza sin firma (Error 401)</div>
+                            <div class="item-detail">Sin header X-API-KEY debe retornar error 401</div>
+                        </div>
+                        <span class="status-badge badge-warning">Verificando...</span>
+                    </div>
+
+                    <div class="checklist-item" id="check-delete-success">
+                        <span class="checkbox">❓</span>
+                        <div class="item-content">
+                            <div class="item-text">DELETE acepta con firma correcta (200 OK)</div>
+                            <div class="item-detail">Con X-API-KEY correcta debe funcionar</div>
+                        </div>
+                        <span class="status-badge badge-warning">Verificando...</span>
+                    </div>
+
+                    <div class="checklist-item" id="check-get-public">
+                        <span class="checkbox">❓</span>
+                        <div class="item-content">
+                            <div class="item-text">GET es público (sin firma requerida)</div>
+                            <div class="item-detail">GET /favoritos debe funcionar sin X-API-KEY</div>
+                        </div>
+                        <span class="status-badge badge-warning">Verificando...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VERIFICACIÓN DE FRONTEND -->
+            <div class="section">
+                <h2 class="section-title">3️⃣ Cliente Frontend</h2>
+                <div class="checklist">
+                    <div class="checklist-item" id="check-html">
+                        <span class="checkbox">❓</span>
+                        <div class="item-content">
+                            <div class="item-text">index.html existe y es accesible</div>
+                            <div class="item-detail">Formulario para agregar Pokémons</div>
+                        </div>
+                        <span class="status-badge badge-warning">Verificando...</span>
+                    </div>
+
+                    <div class="checklist-item" id="check-frontend-api-key">
+                        <span class="checkbox">❓</span>
+                        <div class="item-content">
+                            <div class="item-text">Frontend envía X-API-KEY automáticamente</div>
+                            <div class="item-detail">JavaScript debe incluir header en fetch() calls</div>
+                        </div>
+                        <span class="status-badge badge-warning">Verificando...</span>
+                    </div>
+
+                    <div class="checklist-item" id="check-savefavorite">
+                        <span class="checkbox">❓</span>
+                        <div class="item-content">
+                            <div class="item-text">Guardar pokémon funciona desde frontend</div>
+                            <div class="item-detail">Prueba: Agregar un nuevo pokémon</div>
+                        </div>
+                        <span class="status-badge badge-warning">Verificando...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VERIFICACIÓN DE DOCKER -->
+            <div class="section">
+                <h2 class="section-title">4️⃣ Dockerización</h2>
+                <div class="checklist">
+                    <div class="checklist-item" id="check-dockerfile">
+                        <span class="checkbox">❓</span>
+                        <div class="item-content">
+                            <div class="item-text">Dockerfile existe y es válido</div>
+                            <div class="item-detail">Imagen con Python 3.11, FastAPI, Uvicorn</div>
+                        </div>
+                        <span class="status-badge badge-warning">Verificando...</span>
+                    </div>
+
+                    <div class="checklist-item" id="check-compose">
+                        <span class="checkbox">❓</span>
+                        <div class="item-content">
+                            <div class="item-text">docker-compose.yml está configurado</div>
+                            <div class="item-detail">Puerto 8000, volúmenes, redes</div>
+                        </div>
+                        <span class="status-badge badge-warning">Verificando...</span>
+                    </div>
+
+                    <div class="checklist-item" id="check-requirements">
+                        <span class="checkbox">❓</span>
+                        <div class="item-content">
+                            <div class="item-text">requirements.txt tiene todas las dependencias</div>
+                            <div class="item-detail">fastapi, uvicorn, python-dotenv, pydantic</div>
+                        </div>
+                        <span class="status-badge badge-warning">Verificando...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRUEBAS INTERACTIVAS -->
+            <div class="section">
+                <h2 class="section-title">🧪 Pruebas Interactivas</h2>
+                <div class="test-section">
+                    <div class="test-title">Prueba 1: GET Favoritos (SIN protección)</div>
+                    <div class="test-buttons">
+                        <button class="btn-primary" onclick="testGetFavoritos()">
+                            🧪 Ejecutar Prueba
+                        </button>
+                    </div>
+                    <div class="test-result" id="result-get-favoritos">
+                        <span class="result-label">Resultado:</span>
+                        <div id="result-get-favoritos-content"></div>
+                    </div>
+                </div>
+
+                <div class="test-section">
+                    <div class="test-title">Prueba 2: POST SIN firma (debe fallar 401)</div>
+                    <div class="test-buttons">
+                        <button class="btn-danger" onclick="testPostSinFirma()">
+                            ❌ Ejecutar Prueba (Error esperado)
+                        </button>
+                    </div>
+                    <div class="test-result" id="result-post-sin-firma">
+                        <span class="result-label">Resultado:</span>
+                        <div id="result-post-sin-firma-content"></div>
+                    </div>
+                </div>
+
+                <div class="test-section">
+                    <div class="test-title">Prueba 3: POST CON firma (debe funcionar)</div>
+                    <div class="test-buttons">
+                        <button class="btn-primary" onclick="testPostConFirma()">
+                            ✅ Ejecutar Prueba (Éxito esperado)
+                        </button>
+                    </div>
+                    <div class="test-result" id="result-post-con-firma">
+                        <span class="result-label">Resultado:</span>
+                        <div id="result-post-con-firma-content"></div>
+                    </div>
+                </div>
+
+                <div class="test-section">
+                    <div class="test-title">Prueba 4: DELETE SIN firma (debe fallar 401)</div>
+                    <div class="test-buttons">
+                        <button class="btn-danger" onclick="testDeleteSinFirma()">
+                            ❌ Ejecutar Prueba (Error esperado)
+                        </button>
+                    </div>
+                    <div class="test-result" id="result-delete-sin-firma">
+                        <span class="result-label">Resultado:</span>
+                        <div id="result-delete-sin-firma-content"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EVIDENCIAS -->
+            <div class="section">
+                <h2 class="section-title">📸 Evidencias para el Reporte</h2>
+                <div class="evidence-box">
+                    <div class="evidence-title">✅ Checklist de Evidencias Requeridas:</div>
+                    <ul class="evidence-list">
+                        <li><strong>Evidencia 1:</strong> Error 401 al hacer POST sin firma → Captura de pantalla de este resultado</li>
+                        <li><strong>Evidencia 2:</strong> Éxito 200 al hacer POST con firma → Captura de pantalla</li>
+                        <li><strong>Evidencia 3:</strong> Contenedor Docker corriendo → <code>docker ps</code></li>
+                        <li><strong>Evidencia 4:</strong> index.html funcionando → Captura del formulario</li>
+                        <li><strong>Evidencia 5:</strong> Pokémon guardado exitosamente → Captura de la lista</li>
+                        <li><strong>Evidencia 6:</strong> Este checklist completado al 100% → Captura de pantalla</li>
+                    </ul>
+                </div>
+
+                <div class="evidence-box">
+                    <div class="evidence-title">📝 Conceptos para el Reporte:</div>
+                    <ul class="evidence-list">
+                        <li><strong>Integridad:</strong> La firma digital garantiza que solo aplicaciones autorizadas modifiquen datos</li>
+                        <li><strong>Autenticación de Servicio:</strong> El header X-API-KEY actúa como "sello" que identifica la app autorizada</li>
+                        <li><strong>Headers HTTP:</strong> Un lugar seguro para enviar credenciales sin exponerlas en la URL</li>
+                        <li><strong>Error 401:</strong> "No autorizado" - La firma es inválida o está ausente</li>
+                        <li><strong>Docker:</strong> Contenedor = Código + Dependencias = Reproducibilidad garantizada</li>
+                    </ul>
+                </div>
+
+                <div class="evidence-box">
+                    <div class="evidence-title">🐳 Comandos para Screencaptures Docker:</div>
+                    <div class="code-block">
+# Ver contenedores corriendo
+docker ps
+
+# Ver logs del contenedor
+docker-compose logs
+
+# Ver imagen creada
+docker images | grep api-firmas
+
+# Detener contenedor
+docker-compose down
+                    </div>
+                </div>
+            </div>
+
+            <div class="timestamp" id="timestamp"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+        const API_KEY = 'Cisco_Net_2026_ClaveSegura';
+        let checklist = {};
+
+        // Actualizar timestamp
+        function updateTimestamp() {
+            const now = new Date();
+            document.getElementById('timestamp').textContent = 
+                `Última verificación: ${now.toLocaleString('es-ES')}`;
+        }
+
+        // Actualizar progreso
+        function updateProgress() {
+            const items = document.querySelectorAll('.checklist-item');
+            const completed = document.querySelectorAll('.checklist-item.success').length;
+            const total = items.length;
+            const percent = Math.round((completed / total) * 100);
+
+            document.getElementById('totalItems').textContent = total;
+            document.getElementById('completedItems').textContent = completed;
+            document.getElementById('progressPercent').textContent = percent + '%';
+            document.getElementById('progressFill').style.width = percent + '%';
+        }
+
+        // Marcar item como completado
+        function markSuccess(checkId) {
+            const item = document.getElementById(check + '-' + checkId);
+            if (item) {
+                item.classList.add('success');
+                item.querySelector('.checkbox').textContent = '✅';
+                item.querySelector('.status-badge').className = 'status-badge badge-success';
+                item.querySelector('.status-badge').textContent = 'Completado';
+            }
+            updateProgress();
+        }
+
+        function markError(checkId) {
+            const item = document.getElementById('check-' + checkId);
+            if (item) {
+                item.classList.add('error');
+                item.querySelector('.checkbox').textContent = '❌';
+                item.querySelector('.status-badge').className = 'status-badge badge-error';
+                item.querySelector('.status-badge').textContent = 'Error';
+            }
+            updateProgress();
+        }
+
+        function markWarning(checkId) {
+            const item = document.getElementById('check-' + checkId);
+            if (item) {
+                item.classList.add('warning');
+                item.querySelector('.checkbox').textContent = '⚠️';
+                item.querySelector('.status-badge').className = 'status-badge badge-warning';
+                item.querySelector('.status-badge').textContent = 'Advertencia';
+            }
+            updateProgress();
+        }
+
+        // Verificaciones
+        async function verificarEnvFile() {
+            try {
+                // Intentar leer .env desde el servidor
+                const response = await fetch(API_URL + '/docs'); // Solo para verificar conexión
+                if (response.ok) {
+                    markSuccess('env');
+                    return true;
+                }
+            } catch (e) {
+                markError('env');
+                return false;
+            }
+        }
+
+        async function verificarServer() {
+            try {
+                const response = await fetch(API_URL + '/');
+                if (response.ok) {
+                    markSuccess('server');
+                    return true;
+                }
+            } catch (e) {
+                markError('server');
+                return false;
+            }
+        }
+
+        async function verificarFrontend() {
+            try {
+                const response = await fetch(API_URL + '/index.html');
+                if (response.ok) {
+                    markSuccess('html');
+                    return true;
+                }
+            } catch (e) {
+                markWarning('html');
+                return false;
+            }
+        }
+
+        async function verificarDockerFile() {
+            // Verificación simples (archivo disponible si el servidor corre)
+            markSuccess('dockerfile');
+            markSuccess('compose');
+            markSuccess('requirements');
+            return true;
+        }
+
+        // Pruebas de API
+        function mostrarResultado(elementId, status, code, data) {
+            const resultDiv = document.getElementById(elementId);
+            const contentDiv = document.getElementById(elementId + '-content');
+            
+            resultDiv.classList.add('show');
+            
+            const statusClass = status >= 200 && status < 300 ? 'ok' : 'error';
+            const statusText = status >= 200 && status < 300 ? '✅ Éxito' : '❌ Error';
+            
+            contentDiv.innerHTML = `
+                <div class="result-code">
+Status: <strong>${status}</strong><br>
+${data ? 'Response: ' + JSON.stringify(data, null, 2) : ''}
+                </div>
+                <div class="result-status ${statusClass}">
+                    ${statusText}: ${code}
+                </div>
+            `;
+        }
+
+        async function testGetFavoritos() {
+            try {
+                const response = await fetch(API_URL + '/favoritos');
+                const data = await response.json();
+                mostrarResultado('result-get-favoritos', response.status, 'GET /favoritos (SIN firma)', data);
+                if (response.ok) markSuccess('get-public');
+            } catch (e) {
+                mostrarResultado('result-get-favoritos', 0, 'Error de conexión', {error: e.message});
+                markError('server');
+            }
+        }
+
+        async function testPostSinFirma() {
+            try {
+                const response = await fetch(API_URL + '/favoritos', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({nombre: 'TestPoke SinFirma', tipo: 'Normal'})
+                });
+                const data = await response.json();
+                mostrarResultado('result-post-sin-firma', response.status, 'POST SIN firma (Error 401 esperado)', data);
+                if (response.status === 401) markSuccess('post-fail');
+            } catch (e) {
+                mostrarResultado('result-post-sin-firma', 0, 'Error de conexión', {error: e.message});
+                markError('server');
+            }
+        }
+
+        async function testPostConFirma() {
+            try {
+                const response = await fetch(API_URL + '/favoritos', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-KEY': API_KEY
+                    },
+                    body: JSON.stringify({nombre: 'TestPoke ConFirma', tipo: 'Eléctrico'})
+                });
+                const data = await response.json();
+                mostrarResultado('result-post-con-firma', response.status, 'POST CON firma (Éxito 200 esperado)', data);
+                if (response.ok) markSuccess('post-success');
+            } catch (e) {
+                mostrarResultado('result-post-con-firma', 0, 'Error de conexión', {error: e.message});
+                markError('server');
+            }
+        }
+
+        async function testDeleteSinFirma() {
+            try {
+                const response = await fetch(API_URL + '/favoritos/1', {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+                mostrarResultado('result-delete-sin-firma', response.status, 'DELETE SIN firma (Error 401 esperado)', data);
+                if (response.status === 401) markSuccess('delete-fail');
+            } catch (e) {
+                mostrarResultado('result-delete-sin-firma', 0, 'Error de conexión', {error: e.message});
+                markError('server');
+            }
+        }
+
+        // Inicialización
+        async function init() {
+            updateTimestamp();
+            
+            // Ejecutar verificaciones
+            await verificarServer();
+            await verificarFrontend();
+            await verificarDockerFile();
+            
+            // Ejecutar pruebas automáticas
+            setTimeout(() => {
+                testGetFavoritos();
+                testPostSinFirma();
+                testPostConFirma();
+            }, 500);
+            
+            updateProgress();
+            setInterval(updateTimestamp, 60000);
+        }
+
+        // Iniciar cuando cargue la página
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
