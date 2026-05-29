@@ -1,330 +1,470 @@
-# 🐳 POKEDEX - PROYECTO DOCKERIZADO
+# 🎓 Sistema de Gestión de Becas y Ayudas
 
-## 📌 Descripción Rápida
+## 📋 Descripción General
 
-Este es el proyecto **Pokedex** con arquitectura completa:
-- **Frontend:** Next.js + Nginx (puerto 5500)
-- **Backend:** FastAPI + Python (puerto 8000)
-- **Base de datos:** SQLite con persistencia
+Sistema completo de gestión de becas y ayudas financieras para estudiantes. Permite la administración integral de becas, solicitudes de estudiantes, evaluación de solicitudes y generación de reportes.
+
+**Stack Tecnológico:**
+- **Frontend:** Next.js 16.1.6 + TypeScript + Tailwind CSS + SWR
+- **Backend:** FastAPI + Python + SQLAlchemy + PostgreSQL
+- **Base de Datos:** PostgreSQL 15 con persistencia en Docker
 - **Orquestación:** Docker Compose
+- **Análisis de Código:** SonarQube
 
 ---
 
-## ⚡ INICIO RÁPIDO (< 5 minutos)
+## 🚀 Características Principales
 
-### Opción 1: Script Automático (Recomendado)
+✅ **Autenticación segura** con bcrypt  
+✅ **Dashboard en tiempo real** con actualización automática cada 10 segundos  
+✅ **Gestión de estudiantes** con búsqueda y filtros  
+✅ **Gestión de becas** por tipo (académica, deportiva, necesidad, etc.)  
+✅ **Sistema de solicitudes** con estados y puntuaciones  
+✅ **Exportación de datos** a reportes  
+✅ **Panel administrativo** con estadísticas completas  
+✅ **API REST documentada** con Swagger
 
-#### En Windows (CMD):
-```cmd
-setup.bat
+---
+
+## 📦 Requisitos Previos
+
+- **Docker & Docker Compose** (versión 20.10 o superior)
+- **Windows 10+**, **macOS**, o **Linux**
+- Puertos disponibles: 3000, 8000, 5432, 9000 (PostgreSQL, FastAPI, Frontend, SonarQube)
+
+---
+
+## ⚡ Inicio Rápido
+
+### 1. Clonar o descargar el proyecto
+```bash
+cd tu-directorio-del-proyecto
 ```
 
-#### En Windows (PowerShell):
-```powershell
-powershell -ExecutionPolicy Bypass -File setup.ps1
+### 2. Construir e iniciar los servicios
+```bash
+docker compose up -d --build
 ```
 
-### Opción 2: Manual
+Este comando:
+- ✅ Crea y inicia el contenedor PostgreSQL
+- ✅ Crea y inicia el contenedor FastAPI
+- ✅ Crea y inicia el contenedor pgAdmin
+- ✅ Crea y inicia SonarQube
+- ✅ Inicializa las tablas de base de datos
+- ✅ Carga datos de prueba
 
-```powershell
-# 1. Navega al directorio
-cd c:\Users\dell\Desktop\b_buCAYnbqFTc\b_buCAYnbqFTc
-
-# 2. Construye e inicia
-docker compose up --build
-
-# 3. Espera a que termine y abre en navegador
-# http://localhost:5500
-```
-
----
-
-## 🌐 ACCESO A LA APLICACIÓN
-
-| Componente | URL | Descripción |
-|-----------|-----|-------------|
-| **Frontend** | http://localhost:5500 | Interfaz de usuario |
-| **Backend API** | http://localhost:8000 | API REST |
-| **Swagger Docs** | http://localhost:8000/docs | Documentación interactiva |
-
----
-
-## 📁 DOCUMENTACIÓN
-
-### Para Usuarios
-- **[GUIA_DOCKER.md](GUIA_DOCKER.md)** - Guía completa de ejecución
-- **[COMANDOS_RAPIDOS.md](COMANDOS_RAPIDOS.md)** - Comandos listos para copiar/pegar
-- **[CHECKLIST_VERIFICACION.md](CHECKLIST_VERIFICACION.md)** - Verificar todas las fases
-
-### Para Desarrolladores
-- **[RESUMEN_COMPLETO.md](RESUMEN_COMPLETO.md)** - Resumen técnico completo
-- **[.env.example](.env.example)** - Template de variables de entorno
-- **[docker-compose.yml](docker-compose.yml)** - Configuración de servicios
-- **[Dockerfile](Dockerfile)** - Build del backend
-- **[frontend/Dockerfile](frontend/Dockerfile)** - Build del frontend
-
----
-
-## ✅ CHECKLIST DE INICIO
-
-- [ ] Docker Desktop instalado y ejecutándose
-- [ ] Terminal abierta en el directorio del proyecto
-- [ ] `docker compose up --build` ejecutado
-- [ ] Backend responde en http://localhost:8000
-- [ ] Frontend carga en http://localhost:5500
-- [ ] Base de datos SQLite creada
-- [ ] No hay errores CORS en consola (F12)
-- [ ] API Key está configurada en `.env`
-
----
-
-## 🧪 FASES DE PRUEBA
-
-### Fase 1: Smoke Testing ✅
-Verifica que los servicios iniciaron:
-```powershell
+### 3. Verificar que todos los servicios estén corriendo
+```bash
 docker compose ps
 ```
 
-### Fase 2: Connectivity Testing ✅
-Verifica que el backend responde:
-```powershell
-curl http://localhost:8000/docs
+**Resultado esperado:**
+```
+NAME                   STATUS
+gestorbecas_db        Up (healthy)
+gestorbecas_backend   Up
+gestorbecas_pgadmin   Up
+gestorbecas_sonarqube Up
 ```
 
-### Fase 3: Integration Testing ✅
-1. Abre http://localhost:5500
-2. Abre DevTools (F12)
-3. Verifica que no haya errores de CORS
+### 4. Acceder a la aplicación
 
-### Fase 4: Database Persistence Testing ✅
-1. Guarda un favorito
-2. `docker compose down` y `docker compose up`
-3. Verifica que el favorito persiste
+Abre tu navegador e ingresa a:
+- **Frontend:** http://localhost:3000
+- **API Documentation:** http://localhost:8000/docs
+- **pgAdmin:** http://localhost:5050 (usuario: admin@pgadmin.com / password: admin)
+- **SonarQube:** http://localhost:9000
 
-### Fase 5: Security Testing ✅
-```powershell
-# Sin API Key - debe fallar
-curl -X POST http://localhost:8000/favoritos
+---
 
-# Con API Key - debe funcionar
-curl -X POST http://localhost:8000/favoritos `
-  -H "X-API-KEY: Cisco_Net_2026_ClaveSegura"
+## 🔐 Credenciales de Prueba
+
+### Acceso a la Aplicación
+```
+Email: admin@gestorbecas.com
+Contraseña: 123456789
+Rol: Administrador
+```
+
+O con usuario regular:
+```
+Email: usuarioP@gestorbecas.com
+Contraseña: 123456789
+Rol: Usuario
+```
+
+### Acceso a la Base de Datos (pgAdmin)
+```
+Usuario: admin@pgadmin.com
+Contraseña: admin
 ```
 
 ---
 
-## 📊 ARQUITECTURA
+## 📁 Estructura del Proyecto
 
 ```
-┌─────────────────────────────────────────────┐
-│           USUARIO (Navegador)               │
-└──────────────────┬──────────────────────────┘
-                   │
-                   ▼
-         ┌─────────────────────┐
-         │  FRONTEND (5500)    │
-         │  Next.js + Nginx    │
-         └──────────┬──────────┘
-                    │
-            ┌───────▼────────┐
-            │  pokedex-      │
-            │  network       │
-            │  (Docker)      │
-            └───────┬────────┘
-                    │
-         ┌──────────▼──────────┐
-         │  BACKEND (8000)     │
-         │  FastAPI + Python   │
-         └──────────┬──────────┘
-                    │
-         ┌──────────▼──────────┐
-         │   SQLite Database   │
-         │   (pokemon.db)      │
-         └─────────────────────┘
+proyecto/
+├── app/                          # Código Next.js (Frontend)
+│   ├── (admin)/                 # Rutas administrativas
+│   │   └── admin-dashboard/
+│   ├── (dashboard)/             # Dashboard principal
+│   ├── (public)/                # Páginas públicas
+│   ├── (usuario)/               # Rutas de usuario
+│   ├── auth/                    # Autenticación
+│   │   └── login/
+│   ├── api/                     # Rutas API
+│   │   ├── becas/
+│   │   ├── estudiantes/
+│   │   ├── solicitudes/
+│   │   ├── estadisticas/
+│   │   └── exportar/
+│   └── globals.css
+├── components/                   # Componentes React
+│   ├── dashboard/
+│   ├── forms/
+│   └── ui/
+├── lib/                          # Utilidades y tipos
+│   ├── auth-context.tsx
+│   ├── types.ts
+│   └── utils.ts
+├── public/                       # Archivos estáticos
+├── main.py                       # API Backend (FastAPI)
+├── requirements.txt              # Dependencias Python
+├── package.json                  # Dependencias Node.js
+├── Dockerfile                    # Contenedor Frontend
+├── docker-compose.yml            # Orquestación de servicios
+├── .env                          # Variables de entorno (Backend)
+├── .env.local                    # Variables de entorno (Frontend - Desarrollo)
+└── README.md                     # Este archivo
+
+Backend (main.py):
+- Modelos SQLAlchemy para: Usuarios, Estudiantes, Becas, Solicitudes, Estadísticas
+- Endpoints RESTful para CRUD de todas las entidades
+- Autenticación JWT
+- CORS habilitado
+- Base de datos PostgreSQL
 ```
 
 ---
 
-## 🔐 SEGURIDAD IMPLEMENTADA
+## 🔧 Configuración de Variables de Entorno
 
-| Aspecto | Implementación |
-|--------|----------------|
-| **API Key** | Header `X-API-KEY` requerido |
-| **CORS** | Configurado en FastAPI |
-| **Variables Secretas** | Almacenadas en `.env` (no hardcodeadas) |
-| **Reverse Proxy** | Nginx protegiendo el frontend |
-| **Health Checks** | Verificación automática de servicios |
+### Frontend (.env.local)
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8000
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_ENV=development
+```
+
+### Backend (.env)
+```env
+API_SECRET_KEY=Cisco_Net_2026_ClaveSegura
+DATABASE_URL=postgresql://postgres:postgres@gestorbecas_db:5432/gestorbecas
+DATABASE_USER=postgres
+DATABASE_PASSWORD=postgres
+DATABASE_HOST=gestorbecas_db
+DATABASE_PORT=5432
+API_HOST=0.0.0.0
+API_PORT=8000
+CORS_ORIGINS=http://localhost:3000,http://192.168.0.51:3000
+ENVIRONMENT=development
+```
 
 ---
 
-## 🛠️ COMANDOS ÚTILES
+## 📊 Datos de Prueba Precargados
 
-### Información y Monitoreo
+El sistema se inicializa automáticamente con:
+- **5 usuarios:** 1 admin + 1 coordinador + 1 revisor + 2 estudiantes
+- **50 estudiantes:** Con datos realistas (nombres, emails, promedio, ingreso familiar)
+- **15 becas:** Diversas (académica, deportiva, necesidad, investigación)
+- **200+ solicitudes:** Con relaciones completas y estados variados
 
-```powershell
-# Ver estado de contenedores
-docker compose ps
+Todos estos datos se cargan automáticamente en el primer inicio.
 
-# Ver logs en tiempo real
+---
+
+## 🌐 API REST Endpoints
+
+### Autenticación
+```
+POST   /api/auth/login              # Iniciar sesión
+POST   /api/auth/register           # Registrar usuario
+GET    /api/auth/me                 # Obtener usuario actual
+```
+
+### Estudiantes
+```
+GET    /api/estudiantes             # Listar todos
+GET    /api/estudiantes/{id}        # Obtener por ID
+POST   /api/estudiantes             # Crear
+PUT    /api/estudiantes/{id}        # Actualizar
+DELETE /api/estudiantes/{id}        # Eliminar
+```
+
+### Becas
+```
+GET    /api/becas                   # Listar todas
+GET    /api/becas/{id}              # Obtener por ID
+POST   /api/becas                   # Crear
+PUT    /api/becas/{id}              # Actualizar
+DELETE /api/becas/{id}              # Eliminar
+```
+
+### Solicitudes
+```
+GET    /api/solicitudes             # Listar todas
+GET    /api/solicitudes/{id}        # Obtener por ID
+POST   /api/solicitudes             # Crear
+PUT    /api/solicitudes/{id}        # Actualizar
+DELETE /api/solicitudes/{id}        # Eliminar
+```
+
+### Estadísticas
+```
+GET    /api/estadisticas            # Obtener estadísticas del sistema
+```
+
+### Exportar
+```
+GET    /api/exportar/excel          # Exportar a Excel
+GET    /api/exportar/pdf            # Exportar a PDF
+```
+
+**Documentación interactiva:** http://localhost:8000/docs
+
+---
+
+## 🏗️ Arquitectura del Sistema
+
+```
+┌─────────────────────────────────────────────────────┐
+│                  NAVEGADOR WEB                      │
+│            (http://localhost:3000)                  │
+└────────────────────────┬────────────────────────────┘
+                         │
+                    FRONTEND
+                    Next.js 16
+          ┌──────────────┴──────────────┐
+          │                             │
+          ▼                             ▼
+   PÁGINAS ESTÁTICAS           APIs (Server Components)
+   - Login                      - /api/estadisticas
+   - Dashboard                  - /api/solicitudes
+   - Estudiantes               - /api/becas
+   - Becas                     - /api/estudiantes
+   - Solicitudes               - /api/exportar
+                                │
+                                ▼
+                            BACKEND
+                          FastAPI/Python
+                    (http://localhost:8000)
+                  ┌──────────────┴──────────────┐
+                  │                             │
+                  ▼                             ▼
+             AUTENTICACIÓN                DATABASE
+             - JWT tokens                PostgreSQL 15
+             - BCrypt hashing        (Port 5432)
+             - Session management
+                  │
+                  └─────────────────────────────┘
+                          │
+                    PERSISTENCIA
+                 Docker Volume (b_bucaynbqftc_postgres_data)
+```
+
+---
+
+## 🛠️ Comandos Útiles
+
+### Iniciar los servicios
+```bash
+docker compose up -d
+```
+
+### Detener los servicios
+```bash
+docker compose down
+```
+
+### Detener y borrar volúmenes (⚠️ BORRA DATOS)
+```bash
+docker compose down -v
+```
+
+### Ver logs en tiempo real
+```bash
 docker compose logs -f
 
-# Ver logs del backend
-docker compose logs backend -f
-
-# Ver logs del frontend
-docker compose logs frontend -f
+# O solo de un servicio específico
+docker compose logs -f gestorbecas_backend
+docker compose logs -f gestorbecas_db
 ```
 
-### Control de Servicios
+### Acceder a la base de datos
+```bash
+docker compose exec db psql -U postgres -d gestorbecas
+```
 
-```powershell
-# Iniciar servicios
-docker compose up
-
-# Iniciar en background
-docker compose up -d
-
-# Detener servicios
-docker compose down
-
-# Reiniciar servicios
-docker compose restart
-
-# Reconstruir imágenes
+### Reconstruir los contenedores
+```bash
 docker compose build --no-cache
+docker compose up -d
 ```
 
-### Acceso a Contenedores
-
-```powershell
-# Terminal del backend
-docker compose exec backend bash
-
-# Terminal del frontend
-docker compose exec frontend sh
-
-# Ejecutar comando en backend
-docker compose exec backend python main.py
+### Ejecutar migraciones de datos
+```bash
+# Conectar a la BD y ejecutar script SQL
+docker compose exec db psql -U postgres -d gestorbecas -f /docker-entrypoint-initdb.d/004_test_data.sql
 ```
 
 ---
 
-## 📋 REQUISITOS
+## 📊 Dashboard en Tiempo Real
 
-### Mínimos
-- Docker Desktop 4.0+
-- Windows 11 con WSL 2
-- 2GB RAM disponible
-- 5GB espacio en disco
+El dashboard principal (/admin-dashboard) muestra:
 
-### Recomendado
-- Docker Desktop 4.25+
-- Windows 11 con WSL 2 actualizado
-- 4GB RAM disponible
-- 10GB espacio en disco
-- PowerShell 7+
+**Tarjetas de Estadísticas (Actualización cada 10 segundos):**
+- Total Estudiantes (52)
+- Becas Activas (15)
+- Total Solicitudes (200)
+- Solicitudes Aprobadas
+- Solicitudes Pendientes
+- Solicitudes Rechazadas
+
+**Gráficos (Actualización automática):**
+- Distribución de solicitudes por estado
+- Distribución por tipo de beca
+- Estudiantes por nivel educativo
+- Monto total de becas aprobado
+
+**Tabla de Solicitudes Recientes:**
+- Últimas 5 solicitudes con datos completos
+- Nombre del estudiante y beca asignada
+- Estado actual y puntuación
+
+**Botón de Actualizar Manual:**
+- Fuerza la actualización inmediata de todos los datos
 
 ---
 
-## ❓ PREGUNTAS FRECUENTES
+## 🔒 Seguridad
 
-### P: El puerto 5500 o 8000 ya está en uso
-**R:** Edita `docker-compose.yml` y cambia los puertos:
+✅ **Autenticación:**
+- Contraseñas hasheadas con bcrypt (costo 12)
+- Tokens JWT para sesiones
+
+✅ **API:**
+- CORS configurado por origen
+- Validación de datos con Pydantic
+
+✅ **Base de Datos:**
+- Variables de entorno para credenciales
+- Conexión encriptada en Docker network
+
+✅ **Frontend:**
+- Validación de formularios
+- Protección de rutas autenticadas
+
+---
+
+## 🐛 Solución de Problemas
+
+### El servicio Backend no inicia
+```bash
+# Verificar logs
+docker compose logs gestorbecas_backend
+
+# Reiniciar el contenedor
+docker compose restart gestorbecas_backend
+```
+
+### Error de conexión a la base de datos
+```bash
+# Verificar que PostgreSQL está corriendo
+docker compose ps
+
+# Reiniciar los servicios
+docker compose down
+docker compose up -d
+```
+
+### Frontend muestra "Cannot GET /admin-dashboard"
+```bash
+# Reconstruir el proyecto
+npm run build
+
+# Reiniciar el servicio
+docker compose restart gestorbecas_frontend
+```
+
+### Puerto ya en uso
+```bash
+# Cambiar el puerto en docker-compose.yml
+# O liberar el puerto existente:
+# Windows: netstat -ano | findstr :3000
+# Linux/Mac: lsof -i :3000
+```
+
+---
+
+## 📈 Escalabilidad y Producción
+
+### Para desplegar en producción:
+
+1. **Crear un archivo `.env.production`** con valores de producción
+2. **Usar URLs de dominio** en lugar de localhost
+3. **Configurar certificados SSL/TLS**
+4. **Usar reverse proxy** (Nginx, Traefik)
+5. **Configurar base de datos** en servidor externo
+6. **Habilitar backups** automáticos de PostgreSQL
+7. **Monitorear logs** con herramientas como ELK Stack
+
+### Ejemplo docker-compose para producción:
 ```yaml
-backend:
-  ports:
-    - "8001:8000"  # Cambiar a 8001
-
-frontend:
-  ports:
-    - "5501:80"    # Cambiar a 5501
-```
-
-### P: Cómo ver la base de datos
-**R:** Accede al contenedor y verifica:
-```powershell
-docker compose exec backend sqlite3 pokemon.db "SELECT * FROM favoritos;"
-```
-
-### P: Cómo reiniciar limpiamente
-**R:** 
-```powershell
-docker compose down -v  # Elimina todo incluyendo volúmenes
-docker compose up --build  # Reconstruye desde cero
-```
-
-### P: Cómo cambiar la API Key
-**R:** Edita el archivo `.env`:
-```env
-API_SECRET_KEY=tu_clave_segura_aqui
-```
-Luego reinicia: `docker compose restart`
-
-### P: Los datos no persisten
-**R:** Verifica que el volumen está configurado en `docker-compose.yml` y existe:
-```powershell
-docker volume ls
+version: '3.8'
+services:
+  backend:
+    image: my-registry/gestorbecas-backend:latest
+    environment:
+      - DATABASE_URL=postgresql://user:pass@db-host:5432/gestorbecas
+      - API_SECRET_KEY=${API_SECRET_KEY}
+    restart: always
+    
+  frontend:
+    image: my-registry/gestorbecas-frontend:latest
+    restart: always
 ```
 
 ---
 
-## 🚀 PRÓXIMOS PASOS
+## 📞 Soporte y Contacto
 
-1. **Ejecuta** el script de setup (`setup.bat` o `setup.ps1`)
-2. **Espera** a que se construyan las imágenes (2-3 minutos)
-3. **Abre** http://localhost:5500 en tu navegador
-4. **Completa** el CHECKLIST_VERIFICACION.md
-5. **Captura** evidencia de todas las pruebas
+Para reportar problemas o sugerencias, contacta al equipo de desarrollo.
 
 ---
 
-## 📝 VERSIONES
+## 📄 Licencia
 
-| Componente | Versión |
-|-----------|---------|
-| Docker Compose | 3.8 |
-| Python | 3.11 |
-| FastAPI | 0.109.0 |
-| Uvicorn | 0.27.0 |
-| Node.js | 20-alpine |
-| Nginx | latest-alpine |
-| Next.js | (según package.json) |
+Este proyecto está bajo licencia privada. Todos los derechos reservados.
 
 ---
 
-## 📞 SOPORTE
+## 🎯 Próximas Mejoras
 
-Si encuentras problemas:
-
-1. Revisa **COMANDOS_RAPIDOS.md** para soluciones rápidas
-2. Consulta **GUIA_DOCKER.md** para instrucciones detalladas
-3. Verifica logs: `docker compose logs`
-4. Reinicia limpiamente: `docker compose down -v && docker compose up --build`
-
----
-
-## 📄 LICENCIA
-
-Proyecto educativo - Libre para uso personal y educativo.
+- [ ] Autenticación con OAuth2/Google
+- [ ] Notificaciones por email
+- [ ] Sistema de seguimiento de cambios (audit log)
+- [ ] Gráficos más avanzados con D3.js
+- [ ] Búsqueda full-text en solicitudes
+- [ ] API GraphQL alternativa
+- [ ] Aplicación móvil (React Native)
+- [ ] Integración con sistemas de pago
 
 ---
 
-## ✨ FEATURES
-
-✅ **Frontend Next.js** - Interfaz moderna y responsiva
-✅ **Backend FastAPI** - API REST rápida y segura
-✅ **Docker Compose** - Orquestación simplificada
-✅ **Base de Datos SQLite** - Persistencia local
-✅ **Documentación Swagger** - API interactiva en /docs
-✅ **Health Checks** - Monitoreo automático
-✅ **Reverse Proxy Nginx** - Seguridad y performance
-✅ **Variables de Entorno** - Configuración flexible
-✅ **Scripts de Automatización** - Setup en un click
-✅ **Documentación Completa** - Guías step-by-step
-
----
-
-**¡Tu proyecto Pokedex está listo para usar! 🚀**
-
-Ejecuta `setup.bat` o `setup.ps1` y accede a http://localhost:5500
+**Versión:** 1.0.0  
+**Última actualización:** 2026-05-29  
+**Desarrollado con ❤️ para gestión eficiente de becas**
